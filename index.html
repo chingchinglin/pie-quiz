@@ -55,40 +55,100 @@
   </main>
 
   <script>
-    const questions = [{text:"問卷簡化以便展示",choices:[["💬","A"],["⚔️","B"],["🧠","C"],["📘","D"],["✍️","E"]]}];
-    const results = {'💬':'2.png','⚔️':'3.png','🧠':'4.png','📘':'5.png','✍️':'6.png'};
-    let current=0,counts={'💬':0,'⚔️':0,'🧠':0,'📘':0,'✍️':0};
-    function startQuiz(){document.querySelector('header').style.display='none';showQ();}
-    function showQ(){
-      const q=questions[current],box=document.getElementById("choiceBox");
-      document.getElementById("questionBox").style.display="block";
-      document.getElementById("resultBox").style.display="none";
-      document.getElementById("questionText").textContent=q.text;
-      box.innerHTML="";
-      q.choices.forEach(([e,t])=>{
-        const b=document.createElement("button");
-        b.className="choice-btn";b.innerHTML=`<span style="font-size:1.3rem">${e}</span> ${t}`;
-        b.onclick=()=>choose(e);box.appendChild(b);
+    const questions = [
+      {
+        text: "第1題：和同學踏入平常常去的早餐店，突然發現早餐店的菜單改成英文菜單！這時你會怎麼點餐呢？？",
+        choices: [['💬', '看照片或是跟著朋友點'], ['⚔️', '認真研究每道菜色'], ['🧠', '靠印象猜菜單意思'], ['📘', '慢慢看完再決定'], ['✍️', '試著寫下一份自己特製的餐點']]
+      },
+      {
+        text: "第2題：突然收到朋友用英文發來的訊息l，你的回應是？",
+        choices: [['💬', '直接模仿對方語氣回覆'], ['⚔️', '用翻譯工具確認句構正確'], ['🧠', '快速抓幾個單字猜重點'], ['📘', '一字一句讀出上下文關係'], ['✍️', '嘗試用自己的句型回信、編寫清楚內容']]
+      },
+      {
+        text: "第3題：下課前，老師出了一份英文作文，很少寫英文作文的你，會怎麼辦？",
+        choices: [['💬', '想像口說內容直接寫'], ['⚔️', '先列主詞＋動詞＋受詞結構'], ['🧠', '先挑單字列出再想句子'], ['📘', '找文章範例模仿語氣'], ['✍️', '自己架構文章邏輯，選擇句型與段落配置']]
+      },
+      {
+        text: "第4題：睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？",
+        choices: [['💬', '反覆聽幾遍模仿說出來'], ['⚔️', '逐句抄下來解析文法'], ['🧠', '回聽關鍵單字猜意思'], ['📘', '開字幕比對上下文'], ['✍️', '試著把聽到的內容自己用文字寫下來整理']]
+      },
+      {
+        text: "第5題：學期末有一場英文小組報告，你負責的部分是？",
+        choices: [['💬', '等同學報告來，我負責報告'], ['⚔️', '研究怎麼讓報告拿高分的技巧'], ['🧠', '找老師曾經補充過的資料'], ['📘', '把大家資料彙整起來'], ['✍️', '統整大家的資料與校對內容']]
+      },
+      {
+        text: "第6題：期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
+        choices: [['💬', '先講再說，能溝通就好'], ['⚔️', '想句型想太久講不出口'], ['🧠', '先把會的單字塞進去'], ['📘', '讓我回想一下之前看過的對話範例'], ['✍️', '默默在心裡重組句子，想著怎麼用文字來表達會更順']]
+      }
+    ];
+    const results = {
+      '💬': '2.png',
+      '⚔️': '3.png',
+      '🧠': '4.png',
+      '📘': '5.png',
+      '✍️': '6.png'
+    };
+    let current = 0;
+    let counts = { '💬': 0, '⚔️': 0, '🧠': 0, '📘': 0, '✍️': 0 };
+
+    function startQuiz() {
+      document.querySelector('header').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const qBox = document.getElementById('questionBox');
+      const qText = document.getElementById('questionText');
+      const cBox = document.getElementById('choiceBox');
+      const q = questions[current];
+
+      qBox.style.display = 'block';
+      document.getElementById('resultBox').style.display = 'none';
+
+      qText.textContent = q.text;
+      cBox.innerHTML = '';
+      q.choices.forEach(([emoji, desc]) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
+        btn.onclick = () => choose(emoji);
+        cBox.appendChild(btn);
       });
     }
-    function choose(e){counts[e]++;current++;current>=questions.length?showR():showQ();}
-    function showR(){
-      document.getElementById("questionBox").style.display="none";
-      const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
-      document.getElementById("resultImg").src=results[top];
-      document.getElementById("resultBox").style.display="block";
+
+    function choose(choice) {
+      counts[choice]++;
+      current++;
+      if (current >= questions.length) {
+        showResult();
+      } else {
+        showQuestion();
+      }
     }
-    function downloadResult(){
-      const img=document.getElementById("resultImg");
-      const link=document.createElement("a");
-      link.href=img.src;link.download="我的PIE結果.png";link.click();
+
+    function showResult() {
+      document.getElementById('questionBox').style.display = 'none';
+      const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+      const resultImg = results[top];
+      document.getElementById('resultImg').src = resultImg;
+      document.getElementById('resultBox').style.display = 'block';
     }
-    function copyLink(){
-      const link=window.location.href;
-      navigator.clipboard.writeText(link).then(()=>{
-        const msg=document.getElementById("copyMsg");
-        msg.style.display="block";
-        setTimeout(()=>{msg.style.display="none";},2000);
+
+    function downloadResult() {
+      const img = document.getElementById('resultImg');
+      const link = document.createElement('a');
+      link.href = img.src;
+      link.download = '我的PIE結果.png';
+      link.click();
+    }
+
+    function copyLink() {
+      const link = window.location.href;
+      navigator.clipboard.writeText(link).then(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 2000);
       });
     }
   </script>
