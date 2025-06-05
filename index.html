@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"/>
@@ -11,23 +12,28 @@ body {
   background: #fff8f0;
   margin: 0;
   padding: 0;
+}
 header, main, footer {
   padding: 1rem;
   text-align: center;
+}
 .question, .result {
   display: none;
   margin-top: 2rem;
+}
 button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.2s ease;
+}
 .choices {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   padding-top: 1rem;
+}
 .choice-btn {
   width: 90%;
   max-width: 500px;
@@ -37,24 +43,29 @@ button {
   font-size: 1.05rem;
   border: 1px solid #e4b1ab;
   cursor: pointer;
+}
 .choice-btn:hover {
   background: #ffcad4;
+}
 img.result-img {
   width: 100%;
   max-width: 420px;
   margin-top: 1.2rem;
   border-radius: 12px;
+}
 .result-actions {
   margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
 
 /* Responsive layout tweaks for larger screens */
 @media screen and (min-width: 768px) {
   body {
     font-size: 18px;
+  }
   header img {
   width: 100%;
   max-width: 504px;
@@ -62,17 +73,23 @@ img.result-img {
   margin: 0 auto;
   border-radius: 12px;
   object-fit: contain;
+}
   .question {
     max-width: 720px;
     margin: 2rem auto;
+  }
   .result {
     max-width: 640px;
     margin: 2rem auto;
     font-size: 1.2rem;
+  }
   .choice-btn {
     font-size: 1.15rem;
+  }
   .result-actions button {
     font-size: 1.1rem;
+  }
+}
 
  
 
@@ -83,9 +100,57 @@ img.result-img {
   margin: 0 auto;
   border-radius: 12px;
   object-fit: contain;
+}
+}
 
+
+@media screen and (max-width: 767px) {
+  header img {
+    max-width: 90vw;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .question-container {
+    padding: 1em;
+    font-size: 1.1em;
+  }
+
+  .choices button {
+    width: 100%;
+    margin: 0.5em 0;
+    font-size: 1em;
+  }
+
+  #result {
+    font-size: 1.2em;
+    padding: 1em;
+  }
+
+  .result-image {
+    max-width: 90vw;
+    height: auto;
+    display: block;
+    margin: 0 auto 1em auto;
+  }
+
+  .result-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .result-buttons button {
+    width: 80%;
+    font-size: 1em;
+  }
+}
 </style>
  
+  }
+}
 
 </head>
 <body>
@@ -144,6 +209,7 @@ img.result-img {
       {
         text: "期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
         choices: [['💬', '先講再說，能溝通就好'], ['⚔️', '想句型想太久講不出口'], ['🧠', '先把會的單字塞進去'], ['📘', '讓我回想一下之前看過的對話範例'], ['✍️', '默默在心裡重組句子，想著怎麼用文字來表達會更順']]
+      }
     ];
     const results = {
       '💬': '2.png',
@@ -159,6 +225,7 @@ img.result-img {
       document.querySelector('header').style.display = 'none';
       document.getElementById('quiz').style.display = 'block';
       showQuestion();
+    }
 
     function showQuestion() {
       const qBox = document.getElementById('questionBox');
@@ -178,6 +245,7 @@ img.result-img {
         btn.onclick = () => choose(emoji);
         cBox.appendChild(btn);
       });
+    }
 
     function choose(choice) {
       counts[choice]++;
@@ -186,6 +254,8 @@ img.result-img {
         showResult();
       } else {
         showQuestion();
+      }
+    }
 
     function showResult() {
       document.getElementById('questionBox').style.display = 'none';
@@ -193,6 +263,7 @@ img.result-img {
       const resultImg = results[top];
       document.getElementById('resultImg').src = resultImg;
       document.getElementById('resultBox').style.display = 'block';
+    }
 
     function downloadResult() {
       const img = document.getElementById('resultImg');
@@ -200,6 +271,7 @@ img.result-img {
       link.href = img.src;
       link.download = '我的PIE結果.png';
       link.click();
+    }
 
     function copyLink() {
       const link = window.location.href;
@@ -208,6 +280,7 @@ img.result-img {
         msg.style.display = 'block';
         setTimeout(() => { msg.style.display = 'none'; }, 2000);
       });
+    }
   </script>
 </body>
 </html>
