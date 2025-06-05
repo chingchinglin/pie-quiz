@@ -6,16 +6,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>你是哪一 PIE？</title>
   <style>
-    body { font-family: "Noto Sans TC", sans-serif; background: #fff8f0; margin: 0; padding: 0; }
-    header, main, footer { padding: 1.2rem; text-align: center; }
-    .question, .result { display: none; margin-top: 2rem; }
-    button { border: none; border-radius: 8px; cursor: pointer; transition: 0.2s ease; }
-    .choices { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding-top: 1rem; }
-    .choice-btn { width: 90%; max-width: 400px; padding: 0.75rem; border-radius: 12px; background: #ffe5ec; font-size: 1.05rem; border: 1px solid #e4b1ab; cursor: pointer; }
-    .choice-btn:hover { background: #ffcad4; }
-    img.result-img { width: 90%; max-width: 420px; margin-top: 1.2rem; border-radius: 12px; }
-    .result-actions { margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-  </style>
+/* Base styles */
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  background: #fff8f0;
+  margin: 0;
+  padding: 0;
+}
+header, main, footer {
+  padding: 1rem;
+  text-align: center;
+}
+.question, .result {
+  display: none;
+  margin-top: 2rem;
+}
+button {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.choices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+.choice-btn {
+  width: 90%;
+  max-width: 500px;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: #ffe5ec;
+  font-size: 1.05rem;
+  border: 1px solid #e4b1ab;
+  cursor: pointer;
+}
+.choice-btn:hover {
+  background: #ffcad4;
+}
+img.result-img {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 1.2rem;
+  border-radius: 12px;
+}
+.result-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsive layout tweaks for larger screens */
+@media screen and (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+  header img {
+    max-width: 480px;
+  }
+  .question {
+    max-width: 720px;
+    margin: 2rem auto;
+  }
+  .result {
+    max-width: 640px;
+    margin: 2rem auto;
+    font-size: 1.2rem;
+  }
+  .choice-btn {
+    font-size: 1.15rem;
+  }
+  .result-actions button {
+    font-size: 1.1rem;
+  }
+}
+</style>
 </head>
 <body>
   <header>
@@ -33,7 +103,7 @@
       <div class="result-actions">
         <button onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" 
           style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem;">
-          🎯 加入「英文學測選手村」，找出你的學習派！
+          🎯 加入選手村
         </button>
         <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
           <button onclick="downloadResult()" 
