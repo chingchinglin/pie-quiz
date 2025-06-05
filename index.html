@@ -89,19 +89,22 @@ img.result-img {
   }
 }
 
-  @media screen and (min-width: 768px) {
+ @media screen and (min-width: 768px) {
   main {
     padding: 60px;
   }
 
   header img {
     width: 100%;
-    max-width: 420px;  /* 調這一行 */
+    max-width: 420px;
+    max-height: 300px;   /* ✅ 新增這行 */
     height: auto;
     margin: 0 auto;
-    border-radius: 12px; /* 可有可無，加上更一致 */
+    border-radius: 12px;
+    object-fit: contain; /* 或 cover，看你想要裁切還是縮放 */
   }
 }
+
 </style>
  
   }
