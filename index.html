@@ -67,11 +67,13 @@ img.result-img {
     font-size: 18px;
   }
   header img {
-    width: 100%;
-    max-width: 360px;
-    height: auto;
-    margin: 0 auto;
-  }
+  width: 100%;
+  max-width: 504px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
   .question {
     max-width: 720px;
     margin: 2rem auto;
@@ -89,24 +91,16 @@ img.result-img {
   }
 }
 
- @media screen and (min-width: 768px) {
-  header img {
-    width: 360px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
-}
+ 
 
   header img {
-    width: 100%;
-    max-width: 420px;
-    max-height: 300px;   /* ✅ 新增這行 */
-    height: auto;
-    margin: 0 auto;
-    border-radius: 12px;
-    object-fit: contain; /* 或 cover，看你想要裁切還是縮放 */
-  }
+  width: 100%;
+  max-width: 504px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
 }
 
 </style>
