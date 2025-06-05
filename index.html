@@ -6,17 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>你是哪一 PIE？</title>
   <style>
-    body { font-family: sans-serif; background: #fff8f0; margin: 0; padding: 0; }
-    header, main, footer { padding: 1rem; text-align: center; }
+    body { font-family: "Noto Sans TC", sans-serif; background: #fff8f0; margin: 0; padding: 0; }
+    header, main, footer { padding: 1.2rem; text-align: center; }
     .question, .result { display: none; margin-top: 2rem; }
-    button { margin-top: 1rem; padding: 0.5rem 1rem; font-size: 1rem; }
-    .choices { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-    .choice-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #ccc; background: #f9f9f9; border-radius: 5px; cursor: pointer; }
-    img.result-img { max-width: 300px; margin-top: 1rem; }
+    button { padding: 0.75rem 1.2rem; font-size: 1.1rem; border: none; border-radius: 8px; cursor: pointer; background: #fcd5ce; }
+    .choices { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding-top: 1rem; }
+    .choice-btn { width: 90%; max-width: 400px; padding: 0.75rem; border-radius: 12px; background: #ffe5ec; font-size: 1.05rem; border: 1px solid #e4b1ab; cursor: pointer; transition: all 0.2s ease-in-out; }
+    .choice-btn:hover { background: #ffcad4; }
+    img.result-img { width: 90%; max-width: 420px; margin-top: 1.2rem; border-radius: 12px; }
+    .result-actions { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; align-items: center; }
+    @media screen and (max-width: 600px) {
+      button, .choice-btn { font-size: 1rem; padding: 0.6rem 1rem; }
+      .choices { gap: 0.5rem; }
+    }
   </style>
 </head>
 <body>
   <header>
+    <img src="1.png" alt="PIE封面圖" style="max-width: 90%; height: auto; margin-bottom: 1rem; border-radius: 12px;" />
     <h1>英文學習風格：你是哪一 PIE？</h1>
     <p>依直覺選出最符合你的選項，看看你是哪種英語派系！</p>
     <button onclick="startQuiz()">開始測驗</button>
@@ -30,72 +37,41 @@
     <div class="result" id="resultBox">
       <h2 id="resultTitle"></h2>
       <img id="resultImg" class="result-img" src="" alt="result image">
-      <p><a id="ctaBtn" href="https://www.junyiacademy.org/event/act-eng-prep-summer-25/" target="_blank">✍️ 參加「學測英文選手村」</a></p>
-      <button onclick="downloadResult()">下載圖片</button>
+      <div class="result-actions">
+        <a href="https://www.junyiacademy.org/event/act-eng-prep-summer-25/" target="_blank" style="text-decoration:none; color:#000;">
+          ✨ 加入「學測英文選手村」找出你的學習派！
+        </a>
+        <button onclick="downloadResult()">下載圖片</button>
+        <button onclick="location.reload()">再玩一次</button>
+      </div>
     </div>
   </main>
 
   <script>
     const questions = [
       {
-        text: "和同學踏入平常常去的早餐店，突然發現早餐店的菜單改成英文菜單了！這時你會怎麼點餐呢？",
-        choices: [
-          ['💬', '看照片或是跟著朋友點'],
-          ['⚔️', '認真研究每道菜色'],
-          ['🧠', '靠印象猜菜單意思'],
-          ['📘', '慢慢看完再決定'],
-          ['✍️', '試著寫下一份自己特製的餐點']
-        ]
+        text: "第1題：和同學踏入平常常去的早餐店，突然發現早餐店的菜單改成英文菜單！這時你會怎麼點餐呢？？",
+        choices: [['💬', '看照片或是跟著朋友點'], ['⚔️', '認真研究每道菜色'], ['🧠', '靠印象猜菜單意思'], ['📘', '慢慢看完再決定'], ['✍️', '試著寫下一份自己特製的餐點']]
       },
       {
-        text: "突然收到朋友用英文發來的訊息l，你的回應是？",
-        choices: [
-          ['💬', '直接模仿對方語氣回覆'],
-          ['⚔️', '用翻譯工具確認句構正確'],
-          ['🧠', '快速抓幾個單字猜重點'],
-          ['📘', '一字一句讀出上下文關係'],
-          ['✍️', '嘗試用自己的句型回信']
-        ]
+        text: "第2題：突然收到朋友用英文發來的訊息l，你的回應是？",
+        choices: [['💬', '直接模仿對方語氣回覆'], ['⚔️', '用翻譯工具確認句構正確'], ['🧠', '快速抓幾個單字猜重點'], ['📘', '一字一句讀出上下文關係'], ['✍️', '嘗試用自己的句型回信、編寫清楚內容']]
       },
       {
-        text: "下課前，老師出了一份英文作文，很少寫英文作文的你，會怎麼辦？",
-        choices: [
-          ['💬', '想像口說內容直接寫'],
-          ['⚔️', '先列主詞＋動詞＋受詞結構'],
-          ['🧠', '先挑單字列出再想句子'],
-          ['📘', '找文章範例模仿語氣'],
-          ['✍️', '自己架構文章邏輯']
-        ]
+        text: "第3題：下課前，老師出了一份英文作文，很少寫英文作文的你，會怎麼辦？",
+        choices: [['💬', '想像口說內容直接寫'], ['⚔️', '先列主詞＋動詞＋受詞結構'], ['🧠', '先挑單字列出再想句子'], ['📘', '找文章範例模仿語氣'], ['✍️', '自己架構文章邏輯，選擇句型與段落配置']]
       },
       {
-        text: "睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？？",
-        choices: [
-          ['💬', '反覆聽幾遍模仿說出來'],
-          ['⚔️', '逐句抄下來解析文法'],
-          ['🧠', '回聽關鍵單字猜意思'],
-          ['📘', '開字幕比對上下文'],
-          ['✍️', '把聽到的內容自己寫下來整理']
-        ]
+        text: "第4題：睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？",
+        choices: [['💬', '反覆聽幾遍模仿說出來'], ['⚔️', '逐句抄下來解析文法'], ['🧠', '回聽關鍵單字猜意思'], ['📘', '開字幕比對上下文'], ['✍️', '試著把聽到的內容自己用文字寫下來整理']]
       },
       {
-        text: "學期末有一場英文小組報告，你負責的部分是？",
-        choices: [
-          ['💬', '等同學報告來，我負責報告'],
-          ['⚔️', '研究怎麼拿高分'],
-          ['🧠', '找老師補充過的資料'],
-          ['📘', '把大家資料彙整起來'],
-          ['✍️', '統整資料並校對']
-        ]
+        text: "第5題：學期末有一場英文小組報告，你負責的部分是？",
+        choices: [['💬', '等同學報告來，我負責報告'], ['⚔️', '研究怎麼讓報告拿高分的技巧'], ['🧠', '找老師曾經補充過的資料'], ['📘', '把大家資料彙整起來'], ['✍️', '統整大家的資料與校對內容']]
       },
       {
-        text: "期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
-        choices: [
-          ['💬', '先講再說，能溝通就好'],
-          ['⚔️', '想句型太久講不出口'],
-          ['🧠', '先把會的單字塞進去'],
-          ['📘', '回想看過的對話範例'],
-          ['✍️', '心裡重組句子再說']
-        ]
+        text: "第6題：期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
+        choices: [['💬', '先講再說，能溝通就好'], ['⚔️', '想句型想太久講不出口'], ['🧠', '先把會的單字塞進去'], ['📘', '讓我回想一下之前看過的對話範例'], ['✍️', '默默在心裡重組句子，想著怎麼用文字來表達會更順']]
       }
     ];
 
@@ -130,7 +106,7 @@
       q.choices.forEach(([emoji, desc]) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.innerHTML = `<span style="font-size: 1.5rem;">${emoji}</span> ${desc}`;
+        btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
         btn.onclick = () => choose(emoji);
         cBox.appendChild(btn);
       });
@@ -159,7 +135,7 @@
       const img = document.getElementById('resultImg');
       const link = document.createElement('a');
       link.href = img.src;
-      link.download = '你的PIE結果.png';
+      link.download = '我的英文學習派結果.png';
       link.click();
     }
   </script>
