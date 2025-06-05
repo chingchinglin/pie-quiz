@@ -200,6 +200,11 @@ img.result-img {
     function choose(choice) {
       counts[choice]++;
       current++;
+
+      setTimeout(() => {
+  document.activeElement?.blur();
+}, 10);
+      
       if (current >= questions.length) {
         showResult();
       } else {
