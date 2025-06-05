@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>你是哪一 PIE？</title>
+  <style>
+    body { font-family: sans-serif; background: #fff8f0; margin: 0; padding: 0; }
+    header, main, footer { padding: 1rem; text-align: center; }
+    .question, .result { display: none; margin-top: 2rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; font-size: 1rem; }
+    .choices { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    img.result-img { max-width: 300px; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>英文學習風格：你是哪一 PIE？</h1>
+    <p>依直覺選出最符合你的選項，看看你是哪種英語派系！</p>
+    <button onclick="startQuiz()">開始測驗</button>
+  </header>
+
+  <main id="quiz">
+    <div class="question" id="questionBox">
+      <h2 id="questionText"></h2>
+      <div class="choices" id="choiceBox"></div>
+    </div>
+    <div class="result" id="resultBox">
+      <h2 id="resultTitle"></h2>
+      <img id="resultImg" class="result-img" src="" alt="result image">
+      <p><a id="ctaBtn" href="https://www.junyiacademy.org/event/act-eng-prep-summer-25/" target="_blank">✍️ 參加「學測英文選手村」</a></p>
+      <button onclick="downloadResult()">下載圖片</button>
+    </div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        text: "和同學踏入平常常去的早餐店，突然發現菜單改成英文，你會怎麼點餐？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      },
+      {
+        text: "朋友傳英文訊息來，你的回應是？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      },
+      {
+        text: "老師出了英文作文作業，你會怎麼處理？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      },
+      {
+        text: "看不懂 Youtube 英文影片的部分時，你會怎麼辦？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      },
+      {
+        text: "英文小組報告中你會負責什麼？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      },
+      {
+        text: "遇到外國人和你打招呼，你會怎麼反應？",
+        choices: ['💬', '⚔️', '🧠', '📘', '✍️']
+      }
+    ];
+
+    const results = {
+      '💬': { title: '檸檬派', image: '2.png' },
+      '⚔️': { title: '千層蛋糕', image: '4.png' },
+      '🧠': { title: '巧克力蛋糕', image: '3.png' },
+      '📘': { title: '莓果派', image: '5.png' },
+      '✍️': { title: '起司蛋糕', image: '6.png' }
+    };
+
+    let current = 0;
+    let counts = { '💬': 0, '⚔️': 0, '🧠': 0, '📘': 0, '✍️': 0 };
+
+    function startQuiz() {
+      document.querySelector('header').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const qBox = document.getElementById('questionBox');
+      const qText = document.getElementById('questionText');
+      const cBox = document.getElementById('choiceBox');
+      const q = questions[current];
+
+      qBox.style.display = 'block';
+      document.getElementById('resultBox').style.display = 'none';
+
+      qText.textContent = q.text;
+      cBox.innerHTML = '';
+      q.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => choose(choice);
+        cBox.appendChild(btn);
+      });
+    }
+
+    function choose(choice) {
+      counts[choice]++;
+      current++;
+      if (current >= questions.length) {
+        showResult();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function showResult() {
+      document.getElementById('questionBox').style.display = 'none';
+      const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+      const result = results[top];
+      document.getElementById('resultTitle').textContent = result.title;
+      document.getElementById('resultImg').src = result.image;
+      document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function downloadResult() {
+      const img = document.getElementById('resultImg');
+      const link = document.createElement('a');
+      link.href = img.src;
+      link.download = '你的PIE結果.png';
+      link.click();
+    }
+  </script>
+</body>
+</html>
