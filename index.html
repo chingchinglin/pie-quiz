@@ -16,6 +16,13 @@ header, main, footer {
   padding: 1rem;
   text-align: center;
 }
+header img {
+  width: 100%;
+  max-width: 320px; /* ✅ 手機版圖片大小限制 */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
 .question, .result {
   display: none;
   margin-top: 2rem;
@@ -46,6 +53,12 @@ button {
 .choice-btn:hover {
   background: #ffcad4;
 }
+/* ✅ 清除點擊殘留背景 */
+.choice-btn:focus,
+.choice-btn:active {
+  outline: none;
+  background-color: #ffcad4;
+}
 img.result-img {
   width: 100%;
   max-width: 420px;
@@ -66,12 +79,7 @@ img.result-img {
     font-size: 18px;
   }
   header img {
-    width: 100%;
     max-width: 504px;
-    height: auto;
-    margin: 0 auto;
-    border-radius: 12px;
-    object-fit: contain;
   }
   .question {
     max-width: 720px;
@@ -90,7 +98,6 @@ img.result-img {
   }
 }
 </style>
-
 </head>
 <body>
 <header>
@@ -181,7 +188,10 @@ img.result-img {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
-        btn.onclick = () => choose(emoji);
+        btn.onclick = () => {
+          choose(emoji);
+          btn.blur(); // ✅ 去除殘留 focus 樣式
+        };
         cBox.appendChild(btn);
       });
     }
