@@ -50,9 +50,7 @@ button {
   border: 1px solid #e4b1ab;
   cursor: pointer;
 }
-.choice-btn:hover {
-  background: #ffcad4;
-}
+css<br>@media (hover: hover) and (pointer: fine){<br> .choice-btn:hover{ background:#ffcad4; }<br>}<br>
 /* ✅ 清除點選殘留背景 */
 .choice-btn:focus,
 .choice-btn:active,
@@ -116,7 +114,7 @@ img.result-img {
         </button>
 <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
 <button onclick="downloadResult()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem;">
-            ⬇️ 下載圖片
+            ⬇️ 複製圖片
           </button>
 <button onclick="location.reload()" style="background-color: #dee2e6; color: #000; padding: 0.7rem 1rem;">
             🔄 再玩一次
@@ -220,13 +218,36 @@ img.result-img {
       document.getElementById('resultBox').style.display = 'block';
     }
 
-    function downloadResult() {
-      const img = document.getElementById('resultImg');
-      const link = document.createElement('a');
-      link.href = img.src;
-      link.download = '我的PIE結果.png';
-      link.click();
-    }
+  function downloadResult(){
+  const img   = document.getElementById('resultImg');
+  const resp  = await fetch(img.src);
+  const blob  = await resp.blob();
+
+  /* 1️⃣ 嘗試複製到剪貼簿 (Chrome 124+ / Desktop Safari 18+) */
+  if (navigator.clipboard && window.ClipboardItem){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({[blob.type]:blob})]);
+      alert('已複製圖片 ✨ 到相簿或貼圖處貼上即可');
+      return;
+    }catch(e){ console.warn('Clipboard failed',e); }
+  }
+
+  /* 2️⃣ 嘗試 Web Share API (iOS / Android 新版瀏覽器) */
+  const file = new File([blob],'PIE.png',{type:blob.type});
+  if (navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file],title:'我的 PIE 結果'});
+      return;
+    }catch(e){ console.warn('Share failed',e); }
+  }
+
+  /* 3️⃣ 最後回退成舊的下載行為 */
+  const link   = document.createElement('a');
+  link.href    = img.src;
+  link.download='我的PIE結果.png';
+  link.click();
+}
+
 
     function copyLink() {
       const link = window.location.href;
