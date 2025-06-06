@@ -6,7 +6,7 @@
   <title>英文學習，你是哪一 PIE？</title>
   <style>
     /* ========================================== */
-    /*   最終版：完全移除按下後殘影（button/div）  */
+    /*   取消所有點選效果（不留任何殘影）       */
     /* ========================================== */
 
     /* 基本排版與字型 */
@@ -39,7 +39,7 @@
     /* 所有互動元素（包括選項）都用 cursor:pointer */
     .clickable {
       cursor: pointer;
-      /* 禁止 iOS/Android 原生高亮與選字 */
+      /* 禁止原生高亮與選字 */
       -webkit-tap-highlight-color: transparent !important;
       touch-action: manipulation !important;
       -webkit-touch-callout: none !important;
@@ -59,7 +59,7 @@
       padding-top: 1rem;
     }
 
-    /* 將 <div class="choice-btn"> 當成按鈕 */
+    /* 將 <div class="choice-btn"> 當成按鈕，並完全取消點擊後變化 */
     .choice-btn {
       width: 90%;
       max-width: 500px;
@@ -71,15 +71,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s ease;
+      /* 不要任何 :hover 或 :active 樣式 */
     }
     .choice-btn span.emoji {
       font-size: 1.3rem;
       margin-right: 0.5rem;
-    }
-    /* 懸停時變色，無 :active 狀態 */
-    .choice-btn:hover {
-      background: #ffcad4;
     }
 
     /* 結果圖片大小設定 */
@@ -99,7 +95,7 @@
       gap: 1rem;
     }
 
-    /* 大螢幕 (min-width: 768px) 的排版 */
+    /* 大螢幕 (min-width: 768px) 的進階排版 */
     @media screen and (min-width: 768px) {
       body {
         font-size: 18px;
