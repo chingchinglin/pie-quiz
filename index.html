@@ -62,6 +62,25 @@
       box-shadow: none !important;
       background-color: #ffe5ec !important;
     }
+    .choice-btn {
+  /* 已有的規則，保留前面設定 */
+  -webkit-tap-highlight-color: transparent; /* 移除 iOS 點擊時的高亮（灰色暈染） */
+  touch-action: manipulation;               /* 移除 300ms 延遲並防止某些手勢影響 */
+  -webkit-touch-callout: none;              /* iOS 長按不出現放大／選單提示 */
+  -webkit-user-select: none;                /* 禁止選字，避免粗選時殘留 */
+}
+
+/* 確保 :active 時也不套用任何灰色遮罩 */
+.choice-btn:active {
+  background-color: #ffe5ec !important;     /* 強制還原背景顏色 */
+  box-shadow: none !important;
+}
+
+/* 如果想更保險地覆蓋掉 Android 與 iOS 的種種殘影，也可以這樣做： */
+button, .choice-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
     img.result-img {
       width: 100%;
       max-width: 420px;
