@@ -6,7 +6,7 @@
   <title>英文學習，你是哪一 PIE？</title>
   <style>
     /* ========================================== */
-    /*         完整更新版 CSS（取代原有）        */
+    /*       使用 <div> 做成選項，避免原生按鈕殘影       */
     /* ========================================== */
 
     /* 基本排版與字型 */
@@ -36,16 +36,16 @@
       margin-top: 2rem;
     }
 
-    /* 所有按鈕的共同樣式 */
-    button {
-      border: none;
-      border-radius: 8px;
+    /* 所有互動元素（包含選項）都用 cursor:pointer，避免原生 active 行為 */
+    .clickable {
       cursor: pointer;
-      transition: 0.2s ease;
-      /* ▶▶▶ 針對 iOS/Android 點擊高亮做一律透明，避免殘影 */
-      -webkit-tap-highlight-color: transparent !important;
-      touch-action: manipulation !important;
-      user-select: none !important;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     /* 選項按鈕群組 */
@@ -57,7 +57,7 @@
       padding-top: 1rem;
     }
 
-    /* 單一個選項按鈕 */
+    /* 將 <div class="choice-btn"> 當成按鈕 */
     .choice-btn {
       width: 90%;
       max-width: 500px;
@@ -66,67 +66,23 @@
       background: #ffe5ec;
       font-size: 1.05rem;
       border: 1px solid #e4b1ab;
-      cursor: pointer;
-      /* 再次強制：禁止 iOS 長按彈出、禁止選字 */
-      -webkit-touch-callout: none !important;
-      -webkit-user-select: none !important;
-      -ms-touch-action: manipulation !important;
-      -webkit-appearance: none !important;
-      appearance: none !important;
+      transition: 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    /* 滑鼠/筆電 hover 時的提示 */
+    .choice-btn span.emoji {
+      font-size: 1.3rem;
+      margin-right: 0.5rem;
+    }
+    /* 滑鼠/手指懸停提示 */
     .choice-btn:hover {
       background: #ffcad4;
     }
-
-    /* ─── 「清除殘影」的最基本處理 ─── */
-    /* 針對焦點 (focus)、觸碰後 (active)、focus-visible 做最基本的覆蓋 */
-    .choice-btn:focus,
-    .choice-btn:active,
-    .choice-btn:focus-visible {
-      outline: none !important;
-      box-shadow: none !important;
-      background-color: #ffe5ec !important;
+    /* 按下時，暫時降低透明度 (替代原生的灰色殘影) */
+    .choice-btn:active {
+      opacity: 0.7;
     }
-
-    /* ─── 「加強版」殘影覆蓋 ─── */
-    /* 針對 Firefox Mobile/Android 上的 inner focus 邊框移除 */
-    .choice-btn::-moz-focus-inner {
-      border: 0 !important;
-    }
-
-    /* 強制 .choice-btn 在 :focus 時不顯示任何陰影或輪廓 */
-    .choice-btn:focus {
-      outline: none !important;
-      box-shadow: none !important;
-    }
-
-    /* 再次針對 Android 上記憶性殘影的覆蓋 */
-    .choice-btn:active,
-    .choice-btn:focus-visible {
-      background-color: #ffe5ec !important;
-      box-shadow: none !important;
-      -webkit-box-shadow: none !important;
-    }
-
-    /* 針對所有 button(含 .choice-btn) 的 tap highlight 與手勢延遲做補強 */
-    button,
-    .choice-btn {
-      -webkit-tap-highlight-color: transparent !important;
-      touch-action: manipulation !important;
-      user-select: none !important;
-      -ms-touch-action: manipulation !important;
-    }
-
-    /* 針對 iOS Safari 的最終覆蓋 */
-    button:focus-visible,
-    button:active {
-      -webkit-user-modify: read-only !important;
-      background-color: #ffe5ec !important;
-      box-shadow: none !important;
-    }
-    /* ─── 「加強版」殘影覆蓋結束 ─── */
 
     /* 結果圖片大小設定 */
     img.result-img {
@@ -169,18 +125,14 @@
         font-size: 1.1rem;
       }
     }
-
-    /* ========================================== */
-    /*         完整更新版 CSS 結束 (end)         */
-    /* ========================================== */
   </style>
 </head>
 <body>
   <header>
     <img src="1.png" alt="PIE封面圖" style="max-width: 504px; height: auto; margin: 0 auto; display: block;"/>
-    <button onclick="startQuiz()" style="padding: 0.7rem 1.2rem; font-size: 1.1rem; background: #fcd5ce;">
+    <div class="clickable" onclick="startQuiz()" style="display:inline-block; padding: 0.7rem 1.2rem; font-size: 1.1rem; background: #fcd5ce; border-radius: 8px;">
       開始測驗
-    </button>
+    </div>
   </header>
 
   <main id="quiz">
@@ -192,19 +144,19 @@
     <div class="result" id="resultBox">
       <img id="resultImg" class="result-img" src="" alt="result image"/>
       <div class="result-actions">
-        <button onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem;">
+        <div class="clickable" onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem; border-radius: 8px;">
           🎯 加入「英文學測選手村」，找出你的學習派
-        </button>
+        </div>
         <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-          <button onclick="copyImage()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem;">
+          <div class="clickable" onclick="copyImage()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem; border-radius: 8px;">
             📋 複製圖片
-          </button>
-          <button onclick="location.reload()" style="background-color: #dee2e6; color: #000; padding: 0.7rem 1rem;">
+          </div>
+          <div class="clickable" onclick="location.reload()" style="background-color: #dee2e6; color: #000; padding: 0.7rem 1rem; border-radius: 8px;">
             🔄 再玩一次
-          </button>
-          <button onclick="copyLink()" style="background-color: #caffbf; color: #000; padding: 0.7rem 1rem;">
+          </div>
+          <div class="clickable" onclick="copyLink()" style="background-color: #caffbf; color: #000; padding: 0.7rem 1rem; border-radius: 8px;">
             🔗 分享測驗
-          </button>
+          </div>
         </div>
         <p id="copyMsg" style="display:none; color: green; font-size: 0.9rem;">✅ 已複製連結！</p>
       </div>
@@ -302,18 +254,17 @@
       document.getElementById('resultBox').style.display = 'none';
 
       cBox.innerHTML = '';
-      document.activeElement?.blur(); // 清除先前按鈕焦點
+      document.activeElement?.blur(); // 清除先前元素焦點
 
       qText.textContent = q.text;
       q.choices.forEach(([emoji, desc]) => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
-        btn.onclick = () => {
+        const div = document.createElement('div');
+        div.className = 'choice-btn clickable';
+        div.innerHTML = `<span class="emoji">${emoji}</span><span>${desc}</span>`;
+        div.onclick = () => {
           choose(emoji);
-          btn.blur(); // 按下後立即清除焦點
         };
-        cBox.appendChild(btn);
+        cBox.appendChild(div);
       });
     }
 
