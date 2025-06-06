@@ -1,265 +1,301 @@
-  1 <!DOCTYPE html>
-  2 <html lang="zh-Hant">
-  3 <head>
-  4   <meta charset="utf-8"/>
-  5   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  6   <title>英文學習，你是哪一 PIE？</title>
-  7   <style>
-  8   /* Base styles */
-  9   body {
- 10     font-family: "Noto Sans TC", sans-serif;
- 11     background: #fff8f0;
- 12     margin: 0;
- 13     padding: 0;
- 14   }
- 15   header, main, footer {
- 16     padding: 1rem;
- 17     text-align: center;
- 18   }
- 19   header img {
- 20     width: 100%;
- 21     max-width: 320px;
- 22     height: auto;
- 23     display: block;
- 24     margin: 0 auto;
- 25   }
- 26   .question, .result {
- 27     display: none;
- 28     margin-top: 2rem;
- 29   }
- 30   button {
- 31     border: none;
- 32     border-radius: 8px;
- 33     cursor: pointer;
- 34     transition: 0.2s ease;
- 35     -webkit-tap-highlight-color: transparent; /* ✅ 移除手機點擊殘影 */
- 36   }
- 37   .choices {
- 38     display: flex;
- 39     flex-direction: column;
- 40     align-items: center;
- 41     gap: 0.75rem;
- 42     padding-top: 1rem;
- 43   }
- 44   .choice-btn {
- 45     width: 90%;
- 46     max-width: 500px;
- 47     padding: 0.75rem;
- 48     border-radius: 12px;
- 49     background: #ffe5ec;
- 50     font-size: 1.05rem;
- 51     border: 1px solid #e4b1ab;
- 52     cursor: pointer;
- 53   }
- 54   .choice-btn:hover {
- 55     background: #ffcad4;
- 56   }
- 57   /* ✅ 清除點選殘留背景 */
- 58   .choice-btn:focus,
- 59   .choice-btn:active,
- 60   .choice-btn:focus-visible {
- 61     outline: none !important;
- 62     box-shadow: none !important;
- 63     background-color: #ffe5ec !important;
- 64   }
- 65   img.result-img {
- 66     width: 100%;
- 67     max-width: 420px;
- 68     margin-top: 1.2rem;
- 69     border-radius: 12px;
- 70   }
- 71   .result-actions {
- 72     margin-top: 1.5rem;
- 73     display: flex;
- 74     flex-direction: column;
- 75     align-items: center;
- 76     gap: 1rem;
- 77   }
- 78   @media screen and (min-width: 768px) {
- 79     body {
- 80       font-size: 18px;
- 81     }
- 82     header img {
- 83       max-width: 504px;
- 84     }
- 85     .question {
- 86       max-width: 720px;
- 87       margin: 2rem auto;
- 88     }
- 89     .result {
- 90       max-width: 640px;
- 91       margin: 2rem auto;
- 92       font-size: 1.2rem;
- 93     }
- 94     .choice-btn {
- 95       font-size: 1.15rem;
- 96     }
- 97     .result-actions button {
- 98       font-size: 1.1rem;
- 99     }
-100   }
-101   </style>
-102 </head>
-103 <body>
-104 <header>
-105   <img alt="PIE封面圖" src="1.png" style="max-width: 504px; height: auto; margin: 0 auto; display: block;"/>
-106   <button onclick="startQuiz()" style="padding: 0.7rem 1.2rem; font-size: 1.1rem; background: #fcd5ce;">
-107     開始測驗
-108   </button>
-109 </header>
-110 <main id="quiz">
-111   <div class="question" id="questionBox">
-112     <h2 id="questionText"></h2>
-113     <div class="choices" id="choiceBox"></div>
-114   </div>
-115   <div class="result" id="resultBox">
-116     <img alt="result image" class="result-img" id="resultImg" src=""/>
-117     <div class="result-actions">
-118       <button onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem;">
-119         🎯 加入「英文學測選手村」，找出你的學習派」
-120       </button>
-121       <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-122         <!-- 【第122行：將原本 downloadResult() 按鈕改為 copyImage()】 -->
-123         <button onclick="copyImage()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem;">
-124           📋 複製圖片
-125         </button>
-126         <button onclick="location.reload()" style="background-color: #dee2e6; color: #000; padding: 0.7rem 1rem;">
-127           🔄 再玩一次
-128         </button>
-129         <button onclick="copyLink()" style="background-color: #caffbf; color: #000; padding: 0.7rem 1rem;">
-130           🔗 分享測驗
-131         </button>
-132       </div>
-133       <p id="copyMsg" style="display:none; color: green; font-size: 0.9rem;">✅ 已複製連結！</p>
-134     </div>
-135   </div>
-136 </main>
-137 <script>
-138     const questions = [
-139       {
-140         text: "和同學踏入平常常去的早餐店，突然發現菜單改成英文了!這時你會怎麼點餐呢？",
-141         choices: [['💬', '看照片或是跟著朋友點'], ['⚔️', '認真研究每道菜色'], ['🧠', '靠印象猜菜單意思'], ['📘', '慢慢看完再決定'], ['✍️', '試著寫下一份自己特製的餐點']]
-142       },
-143       {
-144         text: "突然收到朋友用英文發來的訊息，你的回應是？",
-145         choices: [['💬', '直接模仿對方語氣回覆'], ['⚔️', '用翻譯工具確認句構正確'], ['🧠', '快速抓幾個單字猜重點'], ['📘', '一字一句讀出上下文關係'], ['✍️', '嘗試用自己的句型回信、編寫清楚內容']]
-146       },
-147       {
-148         text: "下課前，老師出了一份英文作文，很少寫英文作文的你，會怎麼辦？",
-149         choices: [['💬', '想像口說內容直接寫'], ['⚔️', '先列主詞＋動詞＋受詞結構'], ['🧠', '先挑單字列出再想句子'], ['📘', '找文章範例模仿語氣'], ['✍️', '自己架構文章邏輯，選擇句型與段落配置']]
-150       },
-151       {
-152         text: "睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？",
-153         choices: [['💬', '反覆聽幾遍模仿說出來'], ['⚔️', '逐句抄下來解析文法'], ['🧠', '回聽關鍵單字猜意思'], ['📘', '開字幕比對上下文'], ['✍️', '試著把聽到的內容自己用文字寫下來整理']]
-154       },
-155       {
-156         text: "學期末有一場英文小組報告，你負責的部分是？",
-157         choices: [['💬', '等同學報告來，我負責報告'], ['⚔️', '研究怎麼讓報告拿高分的技巧'], ['🧠', '找老師曾經補充過的資料'], ['📘', '把大家資料彙整起來'], ['✍️', '統整大家的資料與校對內容']]
-158       },
-159       {
-160         text: "期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
-161         choices: [['💬', '先講再說，能溝通就好'], ['⚔️', '想句型想太久講不出口'], ['🧠', '先把會的單字塞進去'], ['📘', '讓我回想一下之前看過的對話範例'], ['✍️', '默默在心裡重組句子，想著怎麼用文字來表達會更順']]
-162       }
-163     ];
-164     const results = {
-165       '💬': '2.png',
-166       '⚔️': '3.png',
-167       '🧠': '4.png',
-168       '📘': '5.png',
-169       '✍️': '6.png'
-170     };
-171     let current = 0;
-172     let counts = { '💬': 0, '⚔️': 0, '🧠': 0, '📘': 0, '✍️': 0 };
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>英文學習，你是哪一 PIE？</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      background: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header, main, footer {
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .question, .result {
+      display: none;
+      margin-top: 2rem;
+    }
+    button {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      -webkit-tap-highlight-color: transparent; /* 移除手機點擊殘影 */
+    }
+    .choices {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 1rem;
+    }
+    .choice-btn {
+      width: 90%;
+      max-width: 500px;
+      padding: 0.75rem;
+      border-radius: 12px;
+      background: #ffe5ec;
+      font-size: 1.05rem;
+      border: 1px solid #e4b1ab;
+      cursor: pointer;
+    }
+    .choice-btn:hover {
+      background: #ffcad4;
+    }
+    /* 清除點選殘留背景 */
+    .choice-btn:focus,
+    .choice-btn:active,
+    .choice-btn:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+      background-color: #ffe5ec !important;
+    }
+    img.result-img {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 1.2rem;
+      border-radius: 12px;
+    }
+    .result-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    @media screen and (min-width: 768px) {
+      body {
+        font-size: 18px;
+      }
+      header img {
+        max-width: 504px;
+      }
+      .question {
+        max-width: 720px;
+        margin: 2rem auto;
+      }
+      .result {
+        max-width: 640px;
+        margin: 2rem auto;
+        font-size: 1.2rem;
+      }
+      .choice-btn {
+        font-size: 1.15rem;
+      }
+      .result-actions button {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="1.png" alt="PIE封面圖" style="max-width: 504px; height: auto; margin: 0 auto; display: block;"/>
+    <button onclick="startQuiz()" style="padding: 0.7rem 1.2rem; font-size: 1.1rem; background: #fcd5ce;">
+      開始測驗
+    </button>
+  </header>
 
-173     function startQuiz() {
-174       document.querySelector('header').style.display = 'none';
-175       document.getElementById('quiz').style.display = 'block';
-176       showQuestion();
-177     }
+  <main id="quiz">
+    <div class="question" id="questionBox">
+      <h2 id="questionText"></h2>
+      <div class="choices" id="choiceBox"></div>
+    </div>
 
-178     function showQuestion() {
-179       const qBox = document.getElementById('questionBox');
-180       const qText = document.getElementById('questionText');
-181       const cBox = document.getElementById('choiceBox');
-182       const q = questions[current];
+    <div class="result" id="resultBox">
+      <img id="resultImg" class="result-img" src="" alt="result image"/>
+      <div class="result-actions">
+        <button onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem;">
+          🎯 加入「英文學測選手村」，找出你的學習派」
+        </button>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+          <button onclick="copyImage()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem;">
+            📋 複製圖片
+          </button>
+          <button onclick="location.reload()" style="background-color: #dee2e6; color: #000; padding: 0.7rem 1rem;">
+            🔄 再玩一次
+          </button>
+          <button onclick="copyLink()" style="background-color: #caffbf; color: #000; padding: 0.7rem 1rem;">
+            🔗 分享測驗
+          </button>
+        </div>
+        <p id="copyMsg" style="display:none; color: green; font-size: 0.9rem;">✅ 已複製連結！</p>
+      </div>
+    </div>
+  </main>
 
-183       qBox.style.display = 'block';
-184       document.getElementById('resultBox').style.display = 'none';
+  <script>
+    const questions = [
+      {
+        text: "和同學踏入平常常去的早餐店，突然發現菜單改成英文了!這時你會怎麼點餐呢？",
+        choices: [
+          ['💬', '看照片或是跟著朋友點'],
+          ['⚔️', '認真研究每道菜色'],
+          ['🧠', '靠印象猜菜單意思'],
+          ['📘', '慢慢看完再決定'],
+          ['✍️', '試著寫下一份自己特製的餐點']
+        ]
+      },
+      {
+        text: "突然收到朋友用英文發來的訊息，你的回應是？",
+        choices: [
+          ['💬', '直接模仿對方語氣回覆'],
+          ['⚔️', '用翻譯工具確認句構正確'],
+          ['🧠', '快速抓幾個單字猜重點'],
+          ['📘', '一字一句讀出上下文關係'],
+          ['✍️', '嘗試用自己的句型回信、編寫清楚內容']
+        ]
+      },
+      {
+        text: "下課前，老師出了一份英文作文，很少寫英文作文的你，會怎麼辦？",
+        choices: [
+          ['💬', '想像口說內容直接寫'],
+          ['⚔️', '先列主詞＋動詞＋受詞結構'],
+          ['🧠', '先挑單字列出再想句子'],
+          ['📘', '找文章範例模仿語氣'],
+          ['✍️', '自己架構文章邏輯，選擇句型與段落配置']
+        ]
+      },
+      {
+        text: "睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？",
+        choices: [
+          ['💬', '反覆聽幾遍模仿說出來'],
+          ['⚔️', '逐句抄下來解析文法'],
+          ['🧠', '回聽關鍵單字猜意思'],
+          ['📘', '開字幕比對上下文'],
+          ['✍️', '試著把聽到的內容自己用文字寫下來整理']
+        ]
+      },
+      {
+        text: "學期末有一場英文小組報告，你負責的部分是？",
+        choices: [
+          ['💬', '等同學報告來，我負責報告'],
+          ['⚔️', '研究怎麼讓報告拿高分的技巧'],
+          ['🧠', '找老師曾經補充過的資料'],
+          ['📘', '把大家資料彙整起來'],
+          ['✍️', '統整大家的資料與校對內容']
+        ]
+      },
+      {
+        text: "期待已久的暑假終於來了！跟同學出去玩，迎面而來的外國人對你開口打招呼，這時你會？",
+        choices: [
+          ['💬', '先講再說，能溝通就好'],
+          ['⚔️', '想句型想太久講不出口'],
+          ['🧠', '先把會的單字塞進去'],
+          ['📘', '讓我回想一下之前看過的對話範例'],
+          ['✍️', '默默在心裡重組句子，想著怎麼用文字來表達會更順']
+        ]
+      }
+    ];
 
-185       cBox.innerHTML = '';
-186       document.activeElement?.blur(); // ✅ 第186行：避免上一題按鈕殘留焦點
+    const results = {
+      '💬': '2.png',
+      '⚔️': '3.png',
+      '🧠': '4.png',
+      '📘': '5.png',
+      '✍️': '6.png'
+    };
 
-187       qText.textContent = q.text;
-188       q.choices.forEach(([emoji, desc]) => {
-189         const btn = document.createElement('button');
-190         btn.className = 'choice-btn';
-191         btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
-192         btn.onclick = () => {
-193           choose(emoji);
-194           btn.blur(); // ✅ 第194行：清除目前按鈕焦點
-195         };
-196         cBox.appendChild(btn);
-197       });
-198     }
+    let current = 0;
+    let counts = { '💬': 0, '⚔️': 0, '🧠': 0, '📘': 0, '✍️': 0 };
 
-199     function choose(choice) {
-200       counts[choice]++;
-201       current++;
+    function startQuiz() {
+      document.querySelector('header').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      showQuestion();
+    }
 
-202       setTimeout(() => {
-203         document.activeElement?.blur(); // ✅ 第203行：延遲再清除一次，確保無殘影
-204       }, 10);
+    function showQuestion() {
+      const qBox = document.getElementById('questionBox');
+      const qText = document.getElementById('questionText');
+      const cBox = document.getElementById('choiceBox');
+      const q = questions[current];
 
-205       if (current >= questions.length) {
-206         showResult();
-207       } else {
-208         showQuestion();
-209       }
-210     }
+      qBox.style.display = 'block';
+      document.getElementById('resultBox').style.display = 'none';
 
-211     function showResult() {
-212       document.getElementById('questionBox').style.display = 'none';
-213       const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
-214       const resultImg = results[top];
-215       document.getElementById('resultImg').src = resultImg;
-216       document.getElementById('resultBox').style.display = 'block';
-217     }
+      cBox.innerHTML = '';
+      document.activeElement?.blur(); // 清除先前按鈕焦點
 
-218     function downloadResult() {
-219       const img = document.getElementById('resultImg');
-220       const link = document.createElement('a');
-221       link.href = img.src;
-222       link.download = '我的PIE結果.png';
-223       link.click();
-224     }
+      qText.textContent = q.text;
+      q.choices.forEach(([emoji, desc]) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<span style="font-size: 1.3rem;">${emoji}</span> ${desc}`;
+        btn.onclick = () => {
+          choose(emoji);
+          btn.blur(); // 按下後立即清除焦點
+        };
+        cBox.appendChild(btn);
+      });
+    }
 
-225     function copyLink() {
-226       const link = window.location.href;
-227       navigator.clipboard.writeText(link).then(() => {
-228         const msg = document.getElementById('copyMsg');
-229         msg.style.display = 'block';
-230         setTimeout(() => { msg.style.display = 'none'; }, 2000);
-231       });
-232     }
+    function choose(choice) {
+      counts[choice]++;
+      current++;
 
-233     // === 第233行起：新增複製圖片功能 ===
-234     async function copyImage() {
-235       try {
-236         const img = document.getElementById('resultImg');
-237         // 取得圖片 Blob
-238         const response = await fetch(img.src);
-239         const blob = await response.blob();
-240         // 建立 ClipboardItem
-241         const item = new ClipboardItem({ [blob.type]: blob });
-242         // 寫入剪貼簿
-243         await navigator.clipboard.write([item]);
-244         alert('圖片已複製到剪貼簿！可在社群或相簿中貼上。');
-245       } catch (err) {
-246         console.error('複製失敗：', err);
-247         // 複製失敗時降級為原本的下載
-248         downloadResult();
-249       }
-250     }
-251   </script>
-252 </body>
-253 </html>
+      setTimeout(() => {
+        document.activeElement?.blur(); // 延遲再清除一次焦點
+      }, 10);
+
+      if (current >= questions.length) {
+        showResult();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function showResult() {
+      document.getElementById('questionBox').style.display = 'none';
+      const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+      const resultImg = results[top];
+      document.getElementById('resultImg').src = resultImg;
+      document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function downloadResult() {
+      const img = document.getElementById('resultImg');
+      const link = document.createElement('a');
+      link.href = img.src;
+      link.download = '我的PIE結果.png';
+      link.click();
+    }
+
+    function copyLink() {
+      const link = window.location.href;
+      navigator.clipboard.writeText(link).then(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 2000);
+      });
+    }
+
+    // 新增：複製結果圖片到剪貼簿
+    async function copyImage() {
+      try {
+        const img = document.getElementById('resultImg');
+        const response = await fetch(img.src);
+        const blob = await response.blob();
+        const item = new ClipboardItem({ [blob.type]: blob });
+        await navigator.clipboard.write([item]);
+        alert('圖片已複製到剪貼簿！可在社群或相簿中貼上。');
+      } catch (err) {
+        console.error('複製失敗：', err);
+        downloadResult(); // 複製失敗時降回下載
+      }
+    }
+  </script>
+</body>
+</html>
