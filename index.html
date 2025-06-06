@@ -62,31 +62,50 @@
       box-shadow: none !important;
       background-color: #ffe5ec !important;
     }
-    .choice-btn {
-  /* 已有的規則，保留前面設定 */
-  -webkit-tap-highlight-color: transparent; /* 移除 iOS 點擊時的高亮（灰色暈染） */
-  touch-action: manipulation;               /* 移除 300ms 延遲並防止某些手勢影響 */
-  -webkit-touch-callout: none;              /* iOS 長按不出現放大／選單提示 */
-  -webkit-user-select: none;                /* 禁止選字，避免粗選時殘留 */
-}
+  /* 去除 Firefox/Android 上 .choice-btn 按下時的內框（inner focus） */
+  .choice-btn::-moz-focus-inner {
+    border: 0;  
+  }
 
-/* 確保 :active 時也不套用任何灰色遮罩 */
-.choice-btn:active {
-  background-color: #ffe5ec !important;     /* 強制還原背景顏色 */
-  box-shadow: none !important;
-}
+  /* 強制 .choice-btn 的 :focus 不要出現陰影或輪廓 */
+  .choice-btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 
-/* 如果想更保險地覆蓋掉 Android 與 iOS 的種種殘影，也可以這樣做： */
-button, .choice-btn {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-    img.result-img {
-      width: 100%;
-      max-width: 420px;
-      margin-top: 1.2rem;
-      border-radius: 12px;
-    }
+  /* 再次針對某些 Android 記憶性殘影做補強 */
+  .choice-btn:active,
+  .choice-btn:focus-visible {
+    background-color: #ffe5ec !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+  }
+
+  /* 確保所有 button 元件 (包含 .choice-btn) 點擊後不做任何 tap highlight */
+  button, 
+  .choice-btn {
+    -webkit-tap-highlight-color: transparent !important;  /* iOS 與新版 Android 都適用 */
+    touch-action: manipulation !important;                 /* 取消延遲與手勢預設 */
+    user-select: none !important;                          /* 禁止文字選取殘影 */
+    -ms-touch-action: manipulation !important;              /* IE/Edge 舊版 */
+  }
+
+  /* 最後再針對 Safari/iOS 加強： */
+  button:focus-visible,
+  button:active {
+    -webkit-user-modify: read-only !important;              /* 禁止選字模式觸發 */
+    background-color: #ffe5ec !important;
+    box-shadow: none !important;
+  }
+  /* ─── 進一步覆寫所有可能的按鈕殘影結束 ─── */
+
+  65  img.result-img {
+  66    width: 100%;
+  67    max-width: 420px;
+  68    margin-top: 1.2rem;
+  69    border-radius: 12px;
+  70  }
+    
     .result-actions {
       margin-top: 1.5rem;
       display: flex;
