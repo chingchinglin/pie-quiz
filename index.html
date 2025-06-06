@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>英文學習，你是哪一 PIE？</title>
   <style>
-    /* Base styles */
+    /* ========================================== */
+    /*         完整更新版 CSS（取代原有）        */
+    /* ========================================== */
+
+    /* 基本排版與字型 */
     body {
       font-family: "Noto Sans TC", sans-serif;
       background: #fff8f0;
@@ -16,6 +20,8 @@
       padding: 1rem;
       text-align: center;
     }
+
+    /* 首頁大圖設定 */
     header img {
       width: 100%;
       max-width: 320px;
@@ -23,17 +29,26 @@
       display: block;
       margin: 0 auto;
     }
+
+    /* 問題區與結果區一開始都隱藏 */
     .question, .result {
       display: none;
       margin-top: 2rem;
     }
+
+    /* 所有按鈕的共同樣式 */
     button {
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: 0.2s ease;
-      -webkit-tap-highlight-color: transparent; /* 移除手機點擊殘影 */
+      /* ▶▶▶ 針對 iOS/Android 點擊高亮做一律透明，避免殘影 */
+      -webkit-tap-highlight-color: transparent !important;
+      touch-action: manipulation !important;
+      user-select: none !important;
     }
+
+    /* 選項按鈕群組 */
     .choices {
       display: flex;
       flex-direction: column;
@@ -41,6 +56,8 @@
       gap: 0.75rem;
       padding-top: 1rem;
     }
+
+    /* 單一個選項按鈕 */
     .choice-btn {
       width: 90%;
       max-width: 500px;
@@ -50,11 +67,21 @@
       font-size: 1.05rem;
       border: 1px solid #e4b1ab;
       cursor: pointer;
+      /* 再次強制：禁止 iOS 長按彈出、禁止選字 */
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      -ms-touch-action: manipulation !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
     }
+
+    /* 滑鼠/筆電 hover 時的提示 */
     .choice-btn:hover {
       background: #ffcad4;
     }
-    /* 清除點選殘留背景 */
+
+    /* ─── 「清除殘影」的最基本處理 ─── */
+    /* 針對焦點 (focus)、觸碰後 (active)、focus-visible 做最基本的覆蓋 */
     .choice-btn:focus,
     .choice-btn:active,
     .choice-btn:focus-visible {
@@ -62,50 +89,54 @@
       box-shadow: none !important;
       background-color: #ffe5ec !important;
     }
-  /* 去除 Firefox/Android 上 .choice-btn 按下時的內框（inner focus） */
-  .choice-btn::-moz-focus-inner {
-    border: 0;  
-  }
 
-  /* 強制 .choice-btn 的 :focus 不要出現陰影或輪廓 */
-  .choice-btn:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
+    /* ─── 「加強版」殘影覆蓋 ─── */
+    /* 針對 Firefox Mobile/Android 上的 inner focus 邊框移除 */
+    .choice-btn::-moz-focus-inner {
+      border: 0 !important;
+    }
 
-  /* 再次針對某些 Android 記憶性殘影做補強 */
-  .choice-btn:active,
-  .choice-btn:focus-visible {
-    background-color: #ffe5ec !important;
-    box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-  }
+    /* 強制 .choice-btn 在 :focus 時不顯示任何陰影或輪廓 */
+    .choice-btn:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
 
-  /* 確保所有 button 元件 (包含 .choice-btn) 點擊後不做任何 tap highlight */
-  button, 
-  .choice-btn {
-    -webkit-tap-highlight-color: transparent !important;  /* iOS 與新版 Android 都適用 */
-    touch-action: manipulation !important;                 /* 取消延遲與手勢預設 */
-    user-select: none !important;                          /* 禁止文字選取殘影 */
-    -ms-touch-action: manipulation !important;              /* IE/Edge 舊版 */
-  }
+    /* 再次針對 Android 上記憶性殘影的覆蓋 */
+    .choice-btn:active,
+    .choice-btn:focus-visible {
+      background-color: #ffe5ec !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+    }
 
-  /* 最後再針對 Safari/iOS 加強： */
-  button:focus-visible,
-  button:active {
-    -webkit-user-modify: read-only !important;              /* 禁止選字模式觸發 */
-    background-color: #ffe5ec !important;
-    box-shadow: none !important;
-  }
-  /* ─── 進一步覆寫所有可能的按鈕殘影結束 ─── */
+    /* 針對所有 button(含 .choice-btn) 的 tap highlight 與手勢延遲做補強 */
+    button,
+    .choice-btn {
+      -webkit-tap-highlight-color: transparent !important;
+      touch-action: manipulation !important;
+      user-select: none !important;
+      -ms-touch-action: manipulation !important;
+    }
 
-  65  img.result-img {
-  66    width: 100%;
-  67    max-width: 420px;
-  68    margin-top: 1.2rem;
-  69    border-radius: 12px;
-  70  }
-    
+    /* 針對 iOS Safari 的最終覆蓋 */
+    button:focus-visible,
+    button:active {
+      -webkit-user-modify: read-only !important;
+      background-color: #ffe5ec !important;
+      box-shadow: none !important;
+    }
+    /* ─── 「加強版」殘影覆蓋結束 ─── */
+
+    /* 結果圖片大小設定 */
+    img.result-img {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 1.2rem;
+      border-radius: 12px;
+    }
+
+    /* 「結果」按鈕群組區 */
     .result-actions {
       margin-top: 1.5rem;
       display: flex;
@@ -113,6 +144,8 @@
       align-items: center;
       gap: 1rem;
     }
+
+    /* 大螢幕 (min-width: 768px) 的進階排版 */
     @media screen and (min-width: 768px) {
       body {
         font-size: 18px;
@@ -136,6 +169,10 @@
         font-size: 1.1rem;
       }
     }
+
+    /* ========================================== */
+    /*         完整更新版 CSS 結束 (end)         */
+    /* ========================================== */
   </style>
 </head>
 <body>
@@ -156,7 +193,7 @@
       <img id="resultImg" class="result-img" src="" alt="result image"/>
       <div class="result-actions">
         <button onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem;">
-          🎯 加入「英文學測選手村」，找出你的學習派」
+          🎯 加入「英文學測選手村」，找出你的學習派
         </button>
         <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
           <button onclick="copyImage()" style="background-color: #fcd5ce; color: #000; padding: 0.7rem 1rem;">
@@ -207,7 +244,7 @@
         ]
       },
       {
-        text: "睡覺前看看Youtube 學英文吧！啊～～有一段看不懂英文句子看不懂，你怎麼做？",
+        text: "睡覺前看看 YouTube 學英文吧！啊～～有一段看不懂英文句子，這時你怎麼做？",
         choices: [
           ['💬', '反覆聽幾遍模仿說出來'],
           ['⚔️', '逐句抄下來解析文法'],
