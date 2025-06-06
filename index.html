@@ -6,7 +6,7 @@
   <title>英文學習，你是哪一 PIE？</title>
   <style>
     /* ========================================== */
-    /*       使用 <div> 做成選項，避免原生按鈕殘影       */
+    /*   最終版：完全移除按下後殘影（button/div）  */
     /* ========================================== */
 
     /* 基本排版與字型 */
@@ -36,16 +36,18 @@
       margin-top: 2rem;
     }
 
-    /* 所有互動元素（包含選項）都用 cursor:pointer，避免原生 active 行為 */
+    /* 所有互動元素（包括選項）都用 cursor:pointer */
     .clickable {
       cursor: pointer;
-      -webkit-user-select: none;
-      user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-appearance: none;
-      appearance: none;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      /* 禁止 iOS/Android 原生高亮與選字 */
+      -webkit-tap-highlight-color: transparent !important;
+      touch-action: manipulation !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      outline: none !important;
     }
 
     /* 選項按鈕群組 */
@@ -66,22 +68,18 @@
       background: #ffe5ec;
       font-size: 1.05rem;
       border: 1px solid #e4b1ab;
-      transition: 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.2s ease;
     }
     .choice-btn span.emoji {
       font-size: 1.3rem;
       margin-right: 0.5rem;
     }
-    /* 滑鼠/手指懸停提示 */
+    /* 懸停時變色，無 :active 狀態 */
     .choice-btn:hover {
       background: #ffcad4;
-    }
-    /* 按下時，暫時降低透明度 (替代原生的灰色殘影) */
-    .choice-btn:active {
-      opacity: 0.7;
     }
 
     /* 結果圖片大小設定 */
@@ -101,7 +99,7 @@
       gap: 1rem;
     }
 
-    /* 大螢幕 (min-width: 768px) 的進階排版 */
+    /* 大螢幕 (min-width: 768px) 的排版 */
     @media screen and (min-width: 768px) {
       body {
         font-size: 18px;
@@ -121,7 +119,7 @@
       .choice-btn {
         font-size: 1.15rem;
       }
-      .result-actions button {
+      .result-actions .clickable {
         font-size: 1.1rem;
       }
     }
@@ -144,7 +142,7 @@
     <div class="result" id="resultBox">
       <img id="resultImg" class="result-img" src="" alt="result image"/>
       <div class="result-actions">
-        <div class="clickable" onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; font-size: 1.05rem; border-radius: 8px;">
+        <div class="clickable" onclick="window.open('https://www.junyiacademy.org/event/act-eng-prep-summer-25/', '_blank')" style="background-color: #d0ebff; color: #003366; padding: 0.7rem 1rem; border-radius: 8px;">
           🎯 加入「英文學測選手村」，找出你的學習派
         </div>
         <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
@@ -273,7 +271,7 @@
       current++;
 
       setTimeout(() => {
-        document.activeElement?.blur(); // 延遲再清除一次焦點
+        document.activeElement?.blur(); // 延遲再清除焦點
       }, 10);
 
       if (current >= questions.length) {
