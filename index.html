@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>英文學習，你是哪一 PIE？</title>
+  <title>英文學習，你是哪一PIE？</title>
   <style>
     /* ========================================== */
     /*   取消所有點選效果（不留任何殘影）       */
@@ -31,9 +31,14 @@
     }
 
     /* 問題區與結果區一開始都隱藏 */
-    .question, .result {
+    /* 將 .question 保留 margin-top:2rem，但把 .result 的 margin-top 去掉 */
+    .question {
       display: none;
       margin-top: 2rem;
+    }
+    .result {
+      display: none;
+      margin-top: 0;  /* ← 修改這裡：去掉原本的 2rem 空白 */
     }
 
     /* 所有互動元素（包括選項）都用 cursor:pointer */
@@ -71,7 +76,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* 不要任何 :hover 或 :active 樣式 */
     }
     .choice-btn span.emoji {
       font-size: 1.3rem;
